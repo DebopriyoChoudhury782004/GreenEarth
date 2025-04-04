@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Login Page</title>
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Background gradient animation */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #fff;
+            background: linear-gradient(45deg, #FF6B6B, #FFD93D, #6BFF6B);
+            background-size: 300% 300%;
+            animation: gradientBG 20s ease infinite;
+        }
+
+        /* Background gradient keyframes */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Particle animations */
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: particleAnimation 10s ease-in-out infinite;
+        }
+
+        @keyframes particleAnimation {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.5);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-50vh) rotate(180deg) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Login container styling */
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .login-container h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        /* Input field styling with glow effect */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 5px;
+            outline: none;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #5471d2;
+            box-shadow: 0 0 10px rgba(84, 113, 210, 0.7);
+        }
+
+        /* Button styling with hover effect */
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #5471d2;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: #4059a8;
+            transform: scale(1.05);
+        }
+
+        /* Social login icons */
+        .social-login {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .social-login a {
+            width: 45px;
+            height: 45px;
+            display: inline-block;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .social-login a img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .social-login a:hover {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .footer-text a {
+            color: #5471d2;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Emoji animation */
+        .emoji {
+            font-size: 40px;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .emoji.happy {
+            transform: scale(1.1);
+        }
+
+        .emoji.sad {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login container -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="email" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div id="emoji" class="emoji">😊</div>
+        </form>
+        
+        <div class="footer-text">
+            Don't have an account? <a href="signup.html">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Firebase and login script -->
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXpUWrLrO4VAcJkfrTPoCY3ZJDch3D7l4",
+            authDomain: "grean-b55a1.firebaseapp.com",
+            projectId: "grean-b55a1",
+            storageBucket: "grean-b55a1.firebasestorage.app",
+            messagingSenderId: "231681146599",
+            appId: "1:231681146599:web:12aa98a56ae78b628b2c42"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Real-time Emoji animation based on input
+        const usernameField = document.getElementById("username");
+        const passwordField = document.getElementById("password");
+        const emoji = document.getElementById("emoji");
+
+        function validateInputs() {
+            const username = usernameField.value;
+            const password = passwordField.value;
+
+            const usernameValid = username.endsWith(".Earth");
+            const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+
+            if (usernameValid && passwordValid) {
+                emoji.textContent = "😊";
+                emoji.classList.add("happy");
+                emoji.classList.remove("sad");
+                return true;
+            } else {
+                emoji.textContent = "😞";
+                emoji.classList.add("sad");
+                emoji.classList.remove("happy");
+                return false;
+            }
+        }
+
+        // Listen to form submission
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const email = usernameField.value;
+            const password = passwordField.value;
+
+            try {
+                // Authenticate the user
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("User signed in:", userCredential.user);
+
+                // Redirect to sudo.html on successful login
+                window.location.href = "sudo.html";
+            } catch (error) {
+                console.error("Error signing in:", error.message);
+                alert("Invalid email or password. Please try again.");
+            }
+        });
+
+        // Real-time input validation
+        usernameField.addEventListener("input", validateInputs);
+        passwordField.addEventListener("input", validateInputs);
+    </script>
+</body>
+</html>
