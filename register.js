@@ -6,6 +6,7 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // According to user's configuration
 const firebaseConfig = {
+  // According to user's configuration
   apiKey: "",
   authDomain: "",
   projectId: "",
