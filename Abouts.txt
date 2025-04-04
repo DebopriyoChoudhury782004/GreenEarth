@@ -1,0 +1,1 @@
+This is a project dedicated to handle some Environment related tasks like climate update, climate graphs, etc.
